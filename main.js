@@ -1,8 +1,8 @@
 // DOM elements
 const resultEl = document.getElementById('result');
 const lengthEl = document.getElementById('length');
-const uppercaseEl = document.getElementById('uppercase');
 const lowercaseEl = document.getElementById('lowercase');
+const uppercaseEl = document.getElementById('uppercase');
 const numbersEl = document.getElementById('numbers');
 const symbolsEl = document.getElementById('symbols');
 const generateEl = document.getElementById('generate');
@@ -24,7 +24,7 @@ generateEl.addEventListener('click', () => {
     const hasNumber = numbersEl.checked;
     const hasSymbol = symbolsEl.checked;
 
-    resultEl.innerText = generatePassword(hasLower, hasUpper, hasSymbol, hasNumber, length);
+    resultEl.innerText = generatePassword(hasLower, hasUpper, hasNumber, hasSymbol, length);
 });
 
 // Generate password function
@@ -34,9 +34,28 @@ function generatePassword(lower, upper, number, symbol, length) {
     // 3. Loop over length, call generator function for each type
     // 4. Add final pw to the pw var and return
 
-    let generatedPassword = "";
+    let passwordGenerated = "";
     const typesCount = lower + upper + number + symbol;
-    console.log('typesCount: ', typesCount);
+
+    // create an array of objects, filtering out unchecked types, passing in the first item of the arr
+    const typesArr = [{lower}, {upper}, {number}, {symbol}].filter(item => Object.values(item)[0]); 
+
+    //console.log(typesArr);
+
+    if (typesCount === 0) {
+        return '';
+    }
+
+    for(let i = 0; i < length; i += typesCount) {
+        typesArr.forEach(type => {
+            const funcName = Object.keys(type)[0];
+            //console.log('funcName: ', funcName);
+
+            passwordGenerated += randomFunc[funcName]();
+        });
+    }
+    return passwordGenerated.slice(0, length);
+
 }
 
 
